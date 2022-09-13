@@ -1,5 +1,6 @@
 # Rails-Ruby-Cheatsheet
-A self made cheatsheet of usefull commands in Rails
+A self made cheatsheet of usefull commands in Rails 7 and Ruby 3.
+please feel free to make proposals
 
 ## Database commands
 
