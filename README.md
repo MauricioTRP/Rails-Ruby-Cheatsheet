@@ -14,9 +14,17 @@ ActiveRecord::Base.connection.tables
 Here are some "most used" (for me) commands while using generators `rails generate <something>` like commands
 
 ### Models
+Create a model
 ```
 rails generate model <model_name_in_singular> attribute_1:<tipe_of_data>:<some_constraint> ...
 ```
+Deletes a model
+
+```
+rails d model .... # deletes
+
+```
+
 
 #### Examples
 
