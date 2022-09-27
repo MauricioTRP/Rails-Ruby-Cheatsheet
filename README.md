@@ -2,6 +2,77 @@
 A self made cheatsheet of usefull commands in Rails 7 and Ruby 3.
 please feel free to make proposals
 
+## Basic security
+### UUID (Universal User Identifier)
+We'll use a UUID instead of the standard incremental integer for the ID of the postgres record to make the (id encrypted)[https://betterprogramming.pub/empowering-a-rails-application-with-uuid-as-default-primary-key-44cd740828e8].
+
+
+1. You have to run the follow migration `rails g migration enable_uuid`
+``` 
+      invoke  active_record
+      create    db/migrate/20220927142009_enable_uuid.rb
+```
+then add this line to the migration file `enable_extension 'pgcrypto'`
+```
+# frozen_string_literal: true
+
+class EnableUuid < ActiveRecord::Migration[7.0]
+  def change
+    enable_extension 'pgcrypto'
+  end
+end
+```
+2. Implement the initializer
+We have to tell our generator that we're going to use uuid instead of incremental integer. So you have to create the file: `config/initializers/generators.rb` 
+``` 
+# frozen_string_literal: true
+
+Rails.application.config.generators do |g|
+  g.orm :active_record, primary_key_type: :uuid
+end
+```
+ Now when you run `rails db:create db:migrate` it will be configured to automatically use UUID as primary_key.
+ 
+ 
+ 3. Devise 
+ 
+ Just follow the documentation to install. 
+ Add `gem 'devise'` to your `Gemfile` and run bundle install.
+ 
+ then run `rails devise:install` and follow the recomendations that appears in the console.
+ 
+ create the controller `turbo_devise_controller.rb` 
+ 
+ ```
+ # app/controllers/turbo_devise_controller.rb
+ 
+ class TurboDeviseController < ApplicationController
+  class Responder < ActionController::Responder
+    def to_turbo_stream
+      controller.render(options.merge(formats: :html))
+    rescue ActionView::MissingTemplate => error
+      if get?
+        raise error
+      elsif has_errors? && default_action
+        render rendering_options.merge(formats: :html, status: :unprocessable_entity)
+      else
+        redirect_to navigation_location
+      end
+    end
+  end
+
+  self.responder = Responder
+  respond_to :html, :turbo_stream
+end
+ ```
+
+
+## Test Driven Development setup
+
+In order to make unitary test in our app, we have to install and setup several gems to make the tests
+
+### 
+
 ## Database commands
 
 ### List database objects (tables) using rails console
